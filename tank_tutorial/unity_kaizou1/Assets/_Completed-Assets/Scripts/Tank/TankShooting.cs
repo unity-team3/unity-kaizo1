@@ -22,6 +22,7 @@ namespace Complete
         private float m_ChargeSpeed;                // How fast the launch force increases, based on the max charge time.
         private bool m_Fired;                       // Whether or not the shell has been launched with this button press.
 
+        Rigidbody shellInstance;
 
         private void OnEnable()
         {
@@ -65,15 +66,15 @@ namespace Complete
                 m_ShootingAudio.Play ();
             }
             // Otherwise, if the fire button is being held and the shell hasn't been launched yet...
-            else if (Input.GetButton (m_FireButton) && !m_Fired)
-            {
-                // Increment the launch force and update the slider.
-                m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+            //else if (Input.GetButton (m_FireButton) && !m_Fired)
+            //{
+            //    // Increment the launch force and update the slider.
+            //    m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
 
-                m_AimSlider.value = m_CurrentLaunchForce;
-            }
+            //    m_AimSlider.value = m_CurrentLaunchForce;
+            //}
             // Otherwise, if the fire button is released and the shell hasn't been launched yet...
-            else if (Input.GetButtonUp (m_FireButton) && !m_Fired)
+            else if (Input.GetButtonUp (m_FireButton) && !m_Fired && shellInstance == null)
             {
                 // ... launch the shell.
                 Fire ();
@@ -87,7 +88,7 @@ namespace Complete
             m_Fired = true;
 
             // Create an instance of the shell and store a reference to it's rigidbody.
-            Rigidbody shellInstance =
+            shellInstance =
                 Instantiate (m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
 
             // Set the shell's velocity to the launch force in the fire position's forward direction.
